@@ -1,0 +1,10 @@
+{
+  "expo": {
+    "name": "todays-record-high-mobile",
+    "slug": "todays-record-high-mobile",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
