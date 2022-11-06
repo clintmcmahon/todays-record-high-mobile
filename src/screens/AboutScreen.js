@@ -28,7 +28,7 @@ function SettingsScreen({ navigation }) {
               About
             </Text>
             <View style={{ paddingTop: 24 }}>
-              <Text style={{ fontSize: 17 }}>
+              <Text selectable={true} style={{ fontSize: 17 }}>
                 Utilizing data provided by the Regional Climate Centers Applied
                 Climate Information System web service this app displays record
                 high, low and normal temperatures for a given date from weather
@@ -36,24 +36,27 @@ function SettingsScreen({ navigation }) {
               </Text>
             </View>
             <View style={{ paddingTop: 10 }}>
-              <Text style={{ fontSize: 17 }}>
+              <Text selectable={true} style={{ fontSize: 17 }}>
                 Navigate between dates by pressing the arrows on either side of
                 the displayed date.
               </Text>
             </View>
             <View style={{ paddingTop: 15 }}>
-              <Text style={{ fontWeight: "700", fontSize: 22 }}>
+              <Text
+                selectable={true}
+                style={{ fontWeight: "700", fontSize: 22 }}
+              >
                 Data sources
               </Text>
             </View>
             <View style={{ paddingTop: 15 }}>
-              <Text style={{ fontSize: 17 }}>
+              <Text selectable={true} style={{ fontSize: 17 }}>
                 Data for this app comes from the Regional Climate Centers -
                 Applied Climate Information System and the queries were built
                 using xmACIS2 Query Builder. All normals used in xmACIS are for
                 the period 1991-2020.
               </Text>
-              <Text style={{ paddingTop: 10, fontSize: 17 }}>
+              <Text selectable={true} style={{ paddingTop: 10, fontSize: 17 }}>
                 The available weather stations are made of up different ThreadEx
                 (Threaded Extremes) stations. These stations take weather data
                 recorded at National Weather Service Automated Surface Observing
@@ -61,12 +64,18 @@ function SettingsScreen({ navigation }) {
                 data to create a single data set of weather information.{" "}
               </Text>
               <View style={{ paddingTop: 15 }}>
-                <Text style={{ fontWeight: "700", fontSize: 22 }}>
+                <Text
+                  selectable={true}
+                  style={{ fontWeight: "700", fontSize: 22 }}
+                >
                   Important links
                 </Text>
               </View>
               <View>
-                <Text style={{ paddingTop: 10, fontSize: 17 }}>
+                <Text
+                  selectable={true}
+                  style={{ paddingTop: 10, fontSize: 17 }}
+                >
                   To learn more about ThreadEx and how this data is compiled:
                 </Text>
                 <TouchableOpacity
@@ -77,13 +86,19 @@ function SettingsScreen({ navigation }) {
                     );
                   }}
                 >
-                  <Text style={{ color: theme.colors.linkBlue, fontSize: 17 }}>
+                  <Text
+                    selectable={true}
+                    style={{ color: theme.colors.linkBlue, fontSize: 17 }}
+                  >
                     Methodology for Developing Threads
                   </Text>
                 </TouchableOpacity>
               </View>
               <View>
-                <Text style={{ paddingTop: 10, fontSize: 17 }}>
+                <Text
+                  selectable={true}
+                  style={{ paddingTop: 10, fontSize: 17 }}
+                >
                   Detailed information about the RCC ACIS:{" "}
                 </Text>
                 <TouchableOpacity
@@ -94,23 +109,48 @@ function SettingsScreen({ navigation }) {
                     );
                   }}
                 >
-                  <Text style={{ color: theme.colors.linkBlue, fontSize: 17 }}>
+                  <Text
+                    selectable={true}
+                    style={{ color: theme.colors.linkBlue, fontSize: 17 }}
+                  >
                     Applied Climate Information System website
                   </Text>
                 </TouchableOpacity>
               </View>
               <View>
-                <Text style={{ paddingTop: 10, fontSize: 17 }}>
-                  Support, bug fixes and feature requests.:{" "}
-                </Text>
                 <Text
-                  style={{
-                    fontSize: 17,
-                    paddingTop: 5,
+                  selectable={true}
+                  style={{ paddingTop: 10, fontSize: 17 }}
+                >
+                  For bugs, feature requests, complaints or coffee
+                  recommendations, please contact me at:{" "}
+                </Text>
+                <TouchableOpacity
+                  style={{ paddingTop: 5 }}
+                  onPress={() => {
+                    Linking.openURL("mailto:clintmcmahon@pm.me");
                   }}
                 >
-                  clintmcmahon@pm.me / @cwmcmhn
-                </Text>
+                  <Text
+                    selectable={true}
+                    style={{ color: theme.colors.linkBlue, fontSize: 17 }}
+                  >
+                    clintmcmahon@pm.me
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{ paddingTop: 5 }}
+                  onPress={() => {
+                    Linking.openURL("https://twitter.com/cwmcmhn");
+                  }}
+                >
+                  <Text
+                    selectable={true}
+                    style={{ color: theme.colors.linkBlue, fontSize: 17 }}
+                  >
+                    @cwmcmhn
+                  </Text>
+                </TouchableOpacity>
               </View>
             </View>
           </View>

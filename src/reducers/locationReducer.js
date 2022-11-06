@@ -3,7 +3,7 @@ import * as locationService from "../services/LocationService";
 
 const initialState = {
   location: null,
-  date: "2022-11-04",
+  date: new Date().toISOString().split("T")[0],
 };
 
 const locationReducer = (state = initialState, action) => {

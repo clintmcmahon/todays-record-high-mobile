@@ -42,6 +42,7 @@ function SetLocation({ navigation }) {
     );
     setSelectedState(stateShortCode);
     setSelectedStateStations(areaStations);
+    setSelectedStation(areaStations[0].name);
   };
 
   const setStation = (station) => {
