@@ -2,7 +2,7 @@
   "expo": {
     "name": "Today's Record High ",
     "slug": "todays-record-high-mobile",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "assetBundlePatterns": [
       "**/*"
     ],
@@ -10,6 +10,9 @@
       "eas": {
         "projectId": "79eec4a7-3aeb-4306-8632-567f0133b263"
       }
+    },
+    "ios": {
+      "buildNumber": "3"
     }
   }
 }

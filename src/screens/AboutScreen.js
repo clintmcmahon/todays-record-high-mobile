@@ -123,7 +123,8 @@ function SettingsScreen({ navigation }) {
                   style={{ paddingTop: 10, fontSize: 17 }}
                 >
                   For bugs, feature requests, complaints or coffee
-                  recommendations, please contact me at:{" "}
+                  recommendations, please create a GitHub issue or contact me
+                  at:{" "}
                 </Text>
                 <TouchableOpacity
                   style={{ paddingTop: 5 }}
@@ -135,7 +136,7 @@ function SettingsScreen({ navigation }) {
                     selectable={true}
                     style={{ color: theme.colors.linkBlue, fontSize: 17 }}
                   >
-                    clintmcmahon@pm.me
+                    Email - clintmcmahon@pm.me
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
@@ -148,7 +149,22 @@ function SettingsScreen({ navigation }) {
                     selectable={true}
                     style={{ color: theme.colors.linkBlue, fontSize: 17 }}
                   >
-                    @cwmcmhn
+                    Twitter - @cwmcmhn
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{ paddingTop: 5 }}
+                  onPress={() => {
+                    Linking.openURL(
+                      "https://github.com/clintmcmahon/todays-record-high-mobile/issues"
+                    );
+                  }}
+                >
+                  <Text
+                    selectable={true}
+                    style={{ color: theme.colors.linkBlue, fontSize: 17 }}
+                  >
+                    GitHub - Create Issue / View Repository
                   </Text>
                 </TouchableOpacity>
               </View>

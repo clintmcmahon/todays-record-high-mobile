@@ -25,6 +25,7 @@ function Home() {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    setIsLoading(true);
     if (state.location) {
       getRecords();
     }
@@ -35,14 +36,19 @@ function Home() {
       state.location.state,
       state.location.station
     );
-    const date = new Date(state.date);
-    const month = (date.getMonth() + 1).toString().padStart(2, "0");
-    const day = date.getDate().toString().padStart(2, "0");
-    const year = date.getFullYear();
+    const dateArray = state.date.split("-");
+
+    const year = dateArray[0];
+    const month = dateArray[1];
+    const day = dateArray[2];
     const shortDate = month + "-" + day;
     const longDate = year + "-" + month + "-" + day;
 
-    setDateName(date.toLocaleString("en-US", { month: "long" }) + " " + day);
+    setDateName(
+      new Date(state.date).toLocaleString("en-US", { month: "long" }) +
+        " " +
+        day
+    );
 
     setRecords(
       await weatherDataService.getRecords(
@@ -65,20 +71,17 @@ function Home() {
   };
 
   const goBack = () => {
-    setIsLoading(true);
     const newDate = addDays(state.date, -1);
     dispatch(changeDate(newDate));
   };
 
   const goForward = () => {
-    setIsLoading(true);
     const newDate = addDays(state.date, 1);
     dispatch(changeDate(newDate));
   };
 
   const onRefresh = async () => {
     setIsRefreshing(true);
-    setIsLoading(true);
     await getRecords();
   };
 
@@ -89,7 +92,6 @@ function Home() {
   };
 
   const resetDate = () => {
-    setIsLoading(true);
     dispatch(changeDate(new Date()));
   };
 
