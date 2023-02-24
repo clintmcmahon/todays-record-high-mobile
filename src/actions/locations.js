@@ -10,6 +10,6 @@ export function changeLocation(location) {
 export function changeDate(date) {
   return {
     type: DATE_CHANGE,
-    payload: date.toISOString().split("T")[0],
+    payload: date.toLocaleDateString(),
   };
 }

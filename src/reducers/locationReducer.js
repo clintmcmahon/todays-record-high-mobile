@@ -6,7 +6,6 @@ const initialState = {
   date: new Date().toLocaleDateString(),
 };
 
-console.log(new Date().toISOString().split("T")[0]);
 const locationReducer = (state = initialState, action) => {
   switch (action.type) {
     case LOCATION_CHANGE:

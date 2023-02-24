@@ -2,7 +2,7 @@
   "expo": {
     "name": "Today's Record High ",
     "slug": "todays-record-high-mobile",
-    "version": "1.0.1",
+    "version": "1.0.6",
     "assetBundlePatterns": [
       "**/*"
     ],
@@ -12,7 +12,16 @@
       }
     },
     "ios": {
-      "buildNumber": "3"
+      "buildNumber": "6"
+    },
+    "runtimeVersion": {
+      "policy": "sdkVersion"
+    },
+    "android": {
+      "versionCode": 3
+    },
+    "updates": {
+      "url": "https://u.expo.dev/79eec4a7-3aeb-4306-8632-567f0133b263"
     }
   }
 }

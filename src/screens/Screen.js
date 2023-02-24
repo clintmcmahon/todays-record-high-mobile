@@ -1,14 +1,14 @@
 import React from "react";
-import { SafeAreaView, View } from "react-native";
+import { SafeAreaView } from "react-native";
 
 export const Screen = (props) => {
   const { children } = props;
-  const containerStyle = {
+  const safeAreaView = {
     flex: 1,
     backgroundColor: "#ffffff",
   };
 
-  return <SafeAreaView style={containerStyle}>{children}</SafeAreaView>;
+  return <SafeAreaView style={safeAreaView}>{children}</SafeAreaView>;
 };
 
 export default Screen;

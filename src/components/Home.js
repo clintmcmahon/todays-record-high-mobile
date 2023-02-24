@@ -5,6 +5,7 @@ import {
   ScrollView,
   TouchableOpacity,
   RefreshControl,
+  StyleSheet,
 } from "react-native";
 import * as locationService from "../services/LocationService";
 import { useSelector, useDispatch } from "react-redux";
@@ -13,11 +14,13 @@ import * as weatherDataService from "../services/WeatherDataService";
 import { Link } from "@react-navigation/native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { changeDate } from "../actions/locations";
+import DailyHistory from "./history/DailyHistory";
 
-function Home() {
+export default function Home() {
   const [dateName, setDateName] = useState();
   const [records, setRecords] = useState(null);
   const [normals, setNormals] = useState(null);
+  const [dailyHistory, setDailyHistory] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const state = useSelector((state) => state);
@@ -36,19 +39,31 @@ function Home() {
       state.location.state,
       state.location.station
     );
-    const dateArray = state.date.split("-");
+    const today = new Date(state.date);
+    const month = (today.getMonth() + 1).toString().padStart(2, "0");
+    const day = today.getDate().toString().padStart(2, "0");
+    const year = today.getFullYear();
 
-    const year = dateArray[0];
-    const month = dateArray[1];
-    const day = dateArray[2];
     const shortDate = month + "-" + day;
     const longDate = year + "-" + month + "-" + day;
 
-    setDateName(
-      new Date(state.date).toLocaleString("en-US", { month: "long" }) +
-        " " +
-        day
-    );
+    const months = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+
+    let monthName = months[today.getMonth()];
+    setDateName(monthName + " " + day);
 
     setRecords(
       await weatherDataService.getRecords(
@@ -62,6 +77,14 @@ function Home() {
       await weatherDataService.getNormals(
         selectedStation.sids[0],
         longDate,
+        longDate
+      )
+    );
+
+    setDailyHistory(
+      await weatherDataService.getDailyHistory(
+        selectedStation.sids[0],
+        "1871-" + shortDate,
         longDate
       )
     );
@@ -112,199 +135,194 @@ function Home() {
 
   return (
     <ScrollView
-      contentContainerStyle={{
-        flex: 1,
-        alignItems: "center",
-        justifyContent: "center",
-      }}
+      contentContainerStyle={{}}
       refreshControl={
         <RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />
       }
     >
-      <View>
-        <Text
-          style={{
-            fontSize: 34,
-            fontWeight: "900",
-            textAlign: "center",
-          }}
-        >
-          {state.location.station.replace("Area", "")}
-        </Text>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "center",
-            paddingTop: 10,
-            textAlign: "center",
-          }}
-        >
-          <TouchableOpacity onPress={goBack} style={{ padding: 5 }}>
-            <FontAwesome5 name="backward" size={32} color={theme.colors.dark} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={resetDate}>
-            <Text
-              style={{
-                fontSize: 20,
-                color: theme.colors.dark,
-                paddingLeft: 20,
-                paddingRight: 20,
-              }}
-            >
-              {dateName}
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={goForward} style={{ padding: 5 }}>
-            <FontAwesome5 name="forward" size={32} color={theme.colors.dark} />
-          </TouchableOpacity>
+      <ScrollView contentContainerStyle={styles.scrollViewContent}>
+        <View style={styles.container}>
+          <Text style={styles.location}>
+            {state.location.station.replace("Area", "")}
+          </Text>
           <View
             style={{
-              borderBottomColor: "#f4f4f4",
-              borderBottomWidth: 1,
-            }}
-          />
-        </View>
-      </View>
-      <View style={{ paddingTop: 20 }}>
-        <View>
-          <View
-            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "center",
               paddingBottom: 10,
-              justifyContent: "center",
-              alignItems: "center",
+              textAlign: "center",
             }}
           >
-            <Text
-              style={{
-                fontWeight: "700",
-                fontSize: 24,
-              }}
-            >
-              {isLoading
-                ? "RECORD HIGH"
-                : `RECORD HIGH (${
-                    records ? records.highDate.getFullYear() : "----"
-                  })`}
-            </Text>
-            <Text style={{ paddingBottom: 5 }}>
-              {records
-                ? `(${
-                    records.highTempPeriodOfRecord
-                      ? `POR: ${records.highTempPeriodOfRecord.join(" - ")}`
-                      : ""
-                  })`
-                : "----"}
-            </Text>
+            <TouchableOpacity onPress={goBack} style={{ padding: 5 }}>
+              <FontAwesome5
+                name="backward"
+                size={32}
+                color={theme.colors.dark}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={resetDate}>
+              <Text style={styles.date}>{dateName}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={goForward} style={{ padding: 5 }}>
+              <FontAwesome5
+                name="forward"
+                size={32}
+                color={theme.colors.dark}
+              />
+            </TouchableOpacity>
+          </View>
 
-            <Text
-              style={{
-                fontWeight: "900",
-                fontSize: 42,
-              }}
-            >
-              {isLoading ? "----" : records ? `${records.highTemp}℉` : "----"}
-            </Text>
+          <View style={styles.weatherDataContainer}>
+            <View style={styles.weatherData}>
+              <Text style={styles.dataLabel}>
+                Record High{" "}
+                {records ? `(${records.highDate.getFullYear()})` : "--"}
+              </Text>
+              <Text style={styles.dataValue}>
+                {isLoading ? "----" : records ? `${records.highTemp}℉` : "----"}
+              </Text>
+            </View>
+            <View style={styles.weatherData}>
+              <Text style={styles.dataLabel}>
+                Record Low{" "}
+                {records ? `(${records.lowDate.getFullYear()})` : "--"}
+              </Text>
+              <Text style={styles.dataValue}>
+                {isLoading ? "----" : records ? `${records.lowTemp}℉` : "----"}
+              </Text>
+            </View>
           </View>
-          <View
-            style={{
-              paddingTop: 10,
-              paddingBottom: 25,
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Text
-              style={{
-                fontWeight: "700",
-                fontSize: 24,
-              }}
-            >
-              NORMAL HIGH
-            </Text>
-            <Text
-              style={{
-                fontWeight: "900",
-                fontSize: 42,
-              }}
-            >
-              {isLoading ? "----" : normals ? `${normals.high}℉` : "----"}
-            </Text>
+          <View style={styles.weatherDataContainer}>
+            <View style={styles.weatherData}>
+              <Text style={styles.dataLabel}>Normal High</Text>
+              <Text style={styles.dataValue}>
+                {isLoading ? "----" : normals ? `${normals.high}℉` : "----"}
+              </Text>
+            </View>
+            <View style={styles.weatherData}>
+              <Text style={styles.dataLabel}>Normal Low</Text>
+              <Text style={styles.dataValue}>
+                {isLoading ? "----" : normals ? `${normals.low}℉` : "----"}
+              </Text>
+            </View>
           </View>
+          <View style={styles.weatherDataContainer}>
+            <View style={styles.weatherData}>
+              <Text style={styles.dataLabel}>
+                Record Precip{" "}
+                {records ? `(${records.precipDate.getFullYear()})` : "--"}
+              </Text>
+              <Text style={styles.dataValue}>
+                {isLoading ? "----" : records ? `${records.precip}''` : "----"}
+              </Text>
+            </View>
+            <View style={styles.weatherData}>
+              <Text style={styles.dataLabel}>
+                Record Snow{" "}
+                {records ? `(${records.snowDate.getFullYear()})` : "--"}
+              </Text>
+              <Text style={styles.dataValue}>
+                {isLoading ? "----" : records ? `${records.snow}''` : "----"}
+              </Text>
+            </View>
+          </View>
+          <Text style={styles.subHeading}>Daily history</Text>
+          {dailyHistory ? <DailyHistory dailyHistory={dailyHistory} /> : ""}
         </View>
-        <View
-          style={{
-            borderBottomColor: "#f4f4f4",
-            borderBottomWidth: 1,
-          }}
-        />
-        <View>
-          <View
-            style={{
-              paddingTop: 25,
-              padingBottom: 10,
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Text
-              style={{
-                fontWeight: "700",
-                fontSize: 24,
-              }}
-            >
-              {isLoading
-                ? "RECORD LOW"
-                : `RECORD LOW (${
-                    records ? records.lowDate.getFullYear() : "----"
-                  })`}
-            </Text>
-            <Text style={{ paddingBottom: 5 }}>
-              {records
-                ? `(${
-                    records.lowTempPeriodOfRecord
-                      ? `POR: ${records.lowTempPeriodOfRecord.join(" - ")}`
-                      : ""
-                  })`
-                : "----"}
-            </Text>
-            <Text
-              style={{
-                fontWeight: "900",
-                fontSize: 42,
-              }}
-            >
-              {isLoading ? "----" : records ? `${records.lowTemp}℉` : "----"}
-            </Text>
-          </View>
-          <View
-            style={{
-              paddingTop: 20,
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Text
-              style={{
-                fontWeight: "700",
-                fontSize: 24,
-              }}
-            >
-              NORMAL LOW
-            </Text>
-            <Text
-              style={{
-                fontWeight: "900",
-                fontSize: 42,
-              }}
-            >
-              {isLoading ? "----" : normals ? `${normals.low}℉` : "----"}
-            </Text>
-          </View>
-        </View>
-      </View>
+      </ScrollView>
     </ScrollView>
   );
 }
 
-export default Home;
+const styles = StyleSheet.create({
+  safeAreaView: {
+    flex: 1,
+  },
+  scrollViewContent: {
+    flexGrow: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingVertical: 20,
+  },
+  container: {
+    width: "90%",
+  },
+  location: {
+    fontSize: 30,
+    fontWeight: "bold",
+    textAlign: "center",
+    marginBottom: 10,
+  },
+  date: {
+    fontSize: 18,
+    textAlign: "center",
+    paddingLeft: 20,
+    paddingRight: 20,
+  },
+  weatherDataContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 20,
+  },
+  weatherData: {
+    flex: 1,
+    alignItems: "center",
+  },
+  dataLabel: {
+    fontSize: 14,
+    color: "#aaa",
+  },
+  dataValue: {
+    fontSize: 24,
+    fontWeight: "bold",
+  },
+  additionalDataContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 10,
+  },
+  additionalData: {
+    flex: 1,
+    alignItems: "center",
+  },
+  additionalDataLabel: {
+    fontSize: 14,
+    color: "#888",
+    marginBottom: 5,
+  },
+  additionalDataValue: {
+    fontSize: 14,
+    color: "#555",
+  },
+  currentTemperatureContainer: {
+    alignItems: "center",
+  },
+  currentTemperatureValueContainer: {
+    backgroundColor: "#ff8c00",
+    borderRadius: 10,
+    padding: 20,
+    alignItems: "center",
+    marginBottom: 10,
+    width: "50%",
+  },
+  currentTemperatureLabel: {
+    fontSize: 18,
+    marginBottom: 5,
+  },
+  currentTemperatureValue: {
+    fontSize: 30,
+    fontWeight: "bold",
+    color: "#000",
+  },
+  highlightedCurrentTemperatureValue: {
+    fontSize: 30,
+    fontWeight: "bold",
+    color: "#fff",
+  },
+  subHeading: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+});
